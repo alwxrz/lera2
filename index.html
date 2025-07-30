@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>ТЕСТ ДЛЯ КОТИКА (Леры)</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background-image: url('https://i.imgur.com/3fJjvXK.png');
+      background-color: #ffe6f0;
+      background-repeat: repeat;
+      background-size: 150px;
+      color: #cc0066;
+      text-align: center;
+    }
+    h1 {
+      margin-top: 30px;
+      font-size: 36px;
+      color: #ff3399;
+    }
+    .question {
+      margin: 20px auto;
+      padding: 20px;
+      width: 80%;
+      border: 2px dashed #ff99cc;
+      border-radius: 20px;
+      background-color: rgba(255, 240, 245, 0.9);
+    }
+    button {
+      margin: 5px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      background-color: #ffb6c1;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .message {
+      font-size: 20px;
+      margin-top: 10px;
+    }
+    .hidden { display: none; }
+    .cats {
+      margin-top: 20px;
+    }
+    .cats img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>ТЕСТ ДЛЯ КОТИКА (Леры) 💖🌸</h1>
+  <div class="cats">
+    <img src="https://cdn2.thecatapi.com/images/MTY3ODIyMQ.jpg" alt="котик">
+    <img src="https://cdn2.thecatapi.com/images/bpc.jpg" alt="котик">
+    <img src="https://cdn2.thecatapi.com/images/9j5.jpg" alt="котик">
+  </div>
+  <div id="quiz"></div>
+
+  <script>
+    const questions = [
+      {
+        text: "1) кто самая красивая девочка на свете?",
+        options: ["Аннтонина", "Дилана", "Ксюша", "Лера"],
+        correct: 3
+      },
+      {
+        text: "2) кого александр любит больше всех на свете",
+        options: ["Клеш рояль", "гитару", "хаты", "леру"],
+        correct: 3,
+        extra: 'я люблю тебя ❤️'
+      },
+      {
+        text: "3) кто самая луууучшая на свете",
+        options: ["лера", "лера", "лера", "лера"],
+        correct: [0,1,2,3],
+        extra: 'киса 😽'
+      },
+      {
+        text: "4) будешь ли ты с александром всю жизнь?",
+        options: ["да", "нет"],
+        correct: 0,
+        special: true
+      },
+      {
+        text: "5) твоя самая любимая группа",
+        options: ["my lovely nightmares", "the garden", "the cure", "corn"],
+        correct: 0,
+        wrongMsg: 'нет 😾'
+      },
+      {
+        text: "6) что тебе дороже?",
+        options: [
+          "родной дом",
+          "наш будущий домик",
+          "рисовать по номеркам",
+          "родители"
+        ],
+        correct: 1,
+        responses: [
+          "значит здесь до конца дней и останешься",
+          "ты такая умничка у меня 💕",
+          "я тебя убью 😡",
+          "осуждаю 🙄"
+        ]
+      },
+      {
+        text: "7) с кем ты еще имеешь право общаться?",
+        options: ["нискем"],
+        correct: 0
+      },
+      {
+        text: "8) кого ты еще имеешь право посчитать красивым?",
+        options: ["никого кроме Александра", "музыканта", "актера", "тт мальчика"],
+        correct: 0,
+        wrongMsg: 'твоему папе ещё везёт 🤨'
+      },
+      {
+        text: "9) я люблю тебя 💗",
+        options: [],
+        correct: null
+      },
+      {
+        text: "10) киса 🐱",
+        options: [],
+        correct: null
+      }
+    ];
+
+    let current = 0;
+
+    function showQuestion() {
+      const container = document.getElementById('quiz');
+      container.innerHTML = '';
+      if (current >= questions.length) {
+        container.innerHTML = '<h2>Теперь после того как ты перешла по ссылке я буду видеть твое местоположение 💞💓💕 люблю))))</h2>';
+        return;
+      }
+
+      const q = questions[current];
+      const box = document.createElement('div');
+      box.className = 'question';
+      const title = document.createElement('h2');
+      title.innerText = q.text;
+      box.appendChild(title);
+
+      if (q.options.length > 0) {
+        q.options.forEach((option, index) => {
+          const btn = document.createElement('button');
+          btn.innerText = option;
+          btn.onclick = () => handleAnswer(index);
+          box.appendChild(btn);
+        });
+      } else {
+        const nextBtn = document.createElement('button');
+        nextBtn.innerText = 'Далее';
+        nextBtn.onclick = () => {
+          current++;
+          showQuestion();
+        };
+        box.appendChild(nextBtn);
+      }
+
+      container.appendChild(box);
+    }
+
+    function handleAnswer(index) {
+      const q = questions[current];
+      const box = document.querySelector('.question');
+      const msg = document.createElement('div');
+      msg.className = 'message';
+
+      let correct = false;
+      if (Array.isArray(q.correct)) {
+        if (q.correct.includes(index)) {
+          correct = true;
+          msg.innerText = 'ты такая умничка у меня 💕';
+          if (q.extra) msg.innerText += `\n${q.extra}`;
+        } else {
+          msg.innerText = 'я щас тебя шваркну любимая 😤';
+        }
+      } else if (index === q.correct) {
+        correct = true;
+        msg.innerText = 'ты такая умничка у меня 💕';
+        if (q.extra) msg.innerText += `\n${q.extra}`;
+      } else {
+        if (q.special && index === 1) {
+          startExplosion();
+          return;
+        }
+        if (q.wrongMsg) {
+          msg.innerText = q.wrongMsg;
+        } else if (q.responses) {
+          msg.innerText = q.responses[index];
+        } else {
+          msg.innerText = 'я щас тебя шваркну любимая 😤';
+        }
+      }
+
+      box.appendChild(msg);
+
+      if (correct) {
+        const nextBtn = document.createElement('button');
+        nextBtn.innerText = 'Далее';
+        nextBtn.onclick = () => {
+          current++;
+          showQuestion();
+        };
+        box.appendChild(nextBtn);
+      }
+    }
+
+    function startExplosion() {
+      const container = document.getElementById('quiz');
+      container.innerHTML = '<h2>Ваш папа взлетит вместе с машиной через <span id="timer">10</span> секунд 🚗💥</h2>';
+      let t = 10;
+      const interval = setInterval(() => {
+        t--;
+        document.getElementById('timer').innerText = t;
+        if (t === 0) {
+          clearInterval(interval);
+          container.innerHTML = '<h2>У тебя последний шанс 💔</h2>';
+          const btn = document.createElement('button');
+          btn.innerText = 'Я все поняла';
+          btn.onclick = () => {
+            showQuestion();
+          };
+          container.appendChild(btn);
+        }
+      }, 1000);
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>
+
